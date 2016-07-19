@@ -1,6 +1,7 @@
 from drawman import *
 from time import sleep
 
+
 def f(x):
     return x*x
 
