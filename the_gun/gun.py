@@ -62,8 +62,8 @@ class Gun:
         :return: возвращает объект снаряда
         """
         shell = Ball()
-        shell._x = self._lx
-        shell._y = self._ly
+        shell._x =  self._x + self._lx
+        shell._y = self._y + self._ly
         shell._Vx = self._lx/10
         shell._Vy = self._ly/10
         shell._R = 5
@@ -76,9 +76,10 @@ def init_game():
     Создаем необходимое для игры количество шариков а также объект - пушку
     :return:
     """
-    global balls
+    global balls, gun, shells_on_fly
     balls = [Ball() for i in range(Ball.initial_number)]
-    #FIXME еще нужно создать пушку
+    shells_on_fly = []
+    gun = Gun()
 
 def init_main_window():
     global root,canvas, scores_text, scores_value
@@ -90,16 +91,20 @@ def init_main_window():
     scores_text = Entry(root, textvariable=scores_value)
     canvas.grid(row=1, column=0, columnspan=3)
     scores_text.grid(row=0, column=2)
-    #canvas.bind('<Button-1>', click_event_handler)
+    canvas.bind('<Button-1>', click_event_handler)
 
 def timer_event():
-    print('New time tick')
     # все периодические рассчеты делаются здесь
     for ball in balls:
         ball.fly()
+    for shell in shells_on_fly:
+        shell.fly()
     canvas.after(timer_delay, timer_event)
 
-
+def click_event_handler(event):
+    global shells_on_fly
+    shell = gun.shoot()
+    shells_on_fly.append(shell)
 
 if __name__=="__main__":
     init_main_window()
